@@ -14,10 +14,12 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-html5-camera-photo": "^1.5.1",
     "expo-camera": "^12.3.0",
+    "expo-modules-core": "^0.11.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-html5-camera-photo": "^1.5.10",
     "react-scripts": "5.0.1",
+    "react-webcam": "^7.0.1",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },

@@ -1,5 +1,6 @@
 import { Grid, makeStyles, createStyles, Card } from "@material-ui/core";
-import Camera from "react-html5-camera-photo";
+import Webcam from "react-webcam";
+// import Camera from "react-html5-camera-photo";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -15,21 +16,24 @@ const useStyles = makeStyles(theme =>
   })
 );
 
+const videoConstraints = {
+  width: 720,
+  height: 480,
+  facingMode: { exact: "environment" },
+};
+
 const CameraPage = () => {
   const classes = useStyles();
-
-  const handleTakePhoto = (dataUri: string) => {
-    // Do stuff with the photo...
-    console.log(dataUri);
-  };
 
   return (
     <Grid container className={classes.container}>
       <Card className={classes.cameraCard}>
-        <Camera
-          onTakePhoto={dataUri => {
-            handleTakePhoto(dataUri);
-          }}
+        <Webcam
+          audio={false}
+          height={480}
+          screenshotFormat="image/jpeg"
+          width={720}
+          videoConstraints={videoConstraints}
         />
       </Card>
     </Grid>
