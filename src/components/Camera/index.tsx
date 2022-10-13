@@ -61,7 +61,7 @@ const CameraPage = () => {
               switchCamera: undefined,
               canvas: undefined,
             }}
-            aspectRatio={16 / 9}
+            aspectRatio={5 / 9}
           />
         )}
         {imageTaken && (
