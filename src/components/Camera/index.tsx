@@ -96,7 +96,7 @@ const CameraPage = () => {
     canvas.height = crop.height;
     const ctx: any = canvas.getContext("2d");
 
-    const pixelRatio = window.devicePixelRatio;
+    const pixelRatio = 1;
     canvas.width = crop.width * pixelRatio;
     canvas.height = crop.height * pixelRatio;
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -157,18 +157,18 @@ const CameraPage = () => {
           </ReactCrop>
         )}
         {croppedImage && (
-          // <Box style={{ width: "100%", height: 720 }}>
-          <img
-            src={output}
-            alt="croppedImage"
-            style={{
-              objectFit: "contain",
-              backgroundSize: "contain",
-              maxWidth: "100%",
-              maxHeight: "100%",
-            }}
-          />
-          // </Box>
+          <Grid container justifyContent="center">
+            <img
+              src={output}
+              alt="croppedImage"
+              style={{
+                objectFit: "contain",
+                backgroundSize: "contain",
+                maxWidth: "100%",
+                maxHeight: "100%",
+              }}
+            />
+          </Grid>
         )}
         <Grid
           container
