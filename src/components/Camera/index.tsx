@@ -153,11 +153,9 @@ const CameraPage = () => {
         {croppedImage && (
           <Grid container justifyContent="center">
             <img
-              src={output}
+              src={image}
               alt="croppedImage"
               style={{
-                objectFit: "contain",
-                backgroundSize: "contain",
                 maxWidth: "30%",
                 maxHeight: "30%",
               }}
