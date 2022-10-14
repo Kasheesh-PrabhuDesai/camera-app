@@ -158,8 +158,8 @@ const CameraPage = () => {
               style={{
                 objectFit: "contain",
                 backgroundSize: "contain",
-                maxWidth: "100%",
-                maxHeight: "100%",
+                maxWidth: "30%",
+                maxHeight: "30%",
               }}
             />
           </Grid>
