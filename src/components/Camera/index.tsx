@@ -59,12 +59,10 @@ const CameraPage = () => {
   const handleFlipCamera = () => {
     if (cameraMode === "environment") {
       setCameraMode("user");
-      console.log(cameraMode);
-    } else if (cameraMode === "user") {
-      setCameraMode("environment");
-      console.log(cameraMode);
+      camera?.current?.switchCamera();
     } else {
-      return;
+      setCameraMode("environment");
+      camera?.current?.switchCamera();
     }
   };
 
