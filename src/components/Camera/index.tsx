@@ -96,13 +96,14 @@ const CameraPage = () => {
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             ruleOfThirds
-            aspect={5 / 9}
             keepSelection
           >
             <img
               src={image}
               alt="test"
-              style={{ transform: "rotateY(180deg)" }}
+              style={{
+                transform: cameraMode === "user" ? "rotateY(180deg)" : "",
+              }}
             />
           </ReactCrop>
         )}
