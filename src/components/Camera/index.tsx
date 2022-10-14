@@ -57,10 +57,14 @@ const CameraPage = () => {
   };
 
   const handleFlipCamera = () => {
-    if (cameraMode === "user") {
-      setCameraMode("environment");
-    } else {
+    if (cameraMode === "environment") {
       setCameraMode("user");
+      console.log(cameraMode);
+    } else if (cameraMode === "user") {
+      setCameraMode("environment");
+      console.log(cameraMode);
+    } else {
+      return;
     }
   };
 
@@ -73,7 +77,7 @@ const CameraPage = () => {
             errorMessages={{
               noCameraAccessible: undefined,
               permissionDenied: undefined,
-              switchCamera: undefined,
+              switchCamera: "Could not find back camera",
               canvas: undefined,
             }}
             facingMode={cameraMode}
@@ -105,12 +109,8 @@ const CameraPage = () => {
             </Button>
           </Grid>
           <Grid item>
-            <IconButton disabled={imageTaken}>
-              <CameraIcon
-                className={classes.cameraIcon}
-                htmlColor="#E34234"
-                onClick={handleClickPhoto}
-              />
+            <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
+              <CameraIcon className={classes.cameraIcon} htmlColor="#E34234" />
             </IconButton>
           </Grid>
           <Grid item style={{ marginTop: 5 }}>
