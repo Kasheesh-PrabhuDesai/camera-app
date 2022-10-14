@@ -6,7 +6,7 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
-import { useCallback, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
 import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
@@ -95,6 +95,9 @@ const CameraPage = () => {
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
+            ruleOfThirds
+            aspect={5 / 9}
+            keepSelection
           >
             <img
               src={image}
@@ -120,11 +123,14 @@ const CameraPage = () => {
           </Grid>
           <Grid item>
             <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
-              <CameraIcon className={classes.cameraIcon} htmlColor="#E34234" />
+              <CameraIcon
+                className={classes.cameraIcon}
+                htmlColor={imageTaken ? "grey" : "#E34234"}
+              />
             </IconButton>
           </Grid>
           <Grid item style={{ marginTop: 5 }}>
-            <IconButton onClick={handleFlipCamera}>
+            <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
               <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
             </IconButton>
           </Grid>
