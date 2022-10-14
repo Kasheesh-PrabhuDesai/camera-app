@@ -5,6 +5,8 @@ import {
   Card,
   Button,
   IconButton,
+  CardMedia,
+  Box,
 } from "@material-ui/core";
 import { useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
@@ -95,8 +97,8 @@ const CameraPage = () => {
     const ctx: any = canvas.getContext("2d");
 
     const pixelRatio = window.devicePixelRatio;
-    canvas.width = crop.width * pixelRatio * scaleX;
-    canvas.height = crop.height * pixelRatio * scaleY;
+    canvas.width = crop.width * pixelRatio;
+    canvas.height = crop.height * pixelRatio;
     ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
     ctx.imageSmoothingQuality = "high";
 
@@ -155,17 +157,18 @@ const CameraPage = () => {
           </ReactCrop>
         )}
         {croppedImage && (
-          <Grid container>
-            <img
-              src={output}
-              alt="croppedImage"
-              style={{
-                objectFit: "contain",
-                maxWidth: "100%",
-                overflow: "hidden",
-              }}
-            />
-          </Grid>
+          // <Box style={{ width: "100%", height: 720 }}>
+          <img
+            src={output}
+            alt="croppedImage"
+            height={"100%"}
+            width={"100%"}
+            style={{
+              objectFit: "contain",
+              backgroundSize: "contain",
+            }}
+          />
+          // </Box>
         )}
         <Grid
           container
