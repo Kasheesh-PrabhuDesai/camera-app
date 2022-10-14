@@ -44,6 +44,7 @@ const CameraPage = () => {
 
   const camera = useRef<any>(null);
   const [image, setImage] = useState("");
+  const [output, setOutput] = useState<string>("");
   const [imageTaken, setImageTaken] = useState<boolean>(false);
   const [cameraMode, setCameraMode] =
     useState<CameraProps["facingMode"]>("environment");
@@ -54,6 +55,7 @@ const CameraPage = () => {
     width: 50,
     height: 50,
   });
+  const [croppedImage, setCroppedImage] = useState<boolean>(false);
 
   const handleClickPhoto = () => {
     setImage(camera?.current?.takePhoto());
@@ -63,6 +65,8 @@ const CameraPage = () => {
   const handleCancelPhoto = () => {
     setImageTaken(false);
     setImage("");
+    setOutput("");
+    setCroppedImage(false);
   };
 
   const handleFlipCamera = () => {
@@ -73,6 +77,48 @@ const CameraPage = () => {
       setCameraMode("environment");
       camera?.current?.switchCamera();
     }
+  };
+
+  const handleCropImageNow = (crop: {
+    width: number;
+    height: number;
+    x: number;
+    y: number;
+  }) => {
+    const canvas = document.createElement("canvas");
+    const imgElement = document.createElement("img");
+    imgElement.src = image;
+    const scaleX = imgElement.naturalWidth / imgElement.width;
+    const scaleY = imgElement.naturalHeight / imgElement.height;
+    canvas.width = crop.width;
+    canvas.height = crop.height;
+    const ctx: any = canvas.getContext("2d");
+
+    const pixelRatio = window.devicePixelRatio;
+    canvas.width = crop.width * pixelRatio * scaleX;
+    canvas.height = crop.height * pixelRatio * scaleY;
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.imageSmoothingQuality = "high";
+
+    ctx.drawImage(
+      imgElement,
+      crop.x * scaleX,
+      crop.y * scaleY,
+      crop.width * scaleX,
+      crop.height * scaleY,
+      0,
+      0,
+      crop.width,
+      crop.height
+    );
+
+    // Converting to base64
+    const base64Image = canvas.toDataURL("image/jpeg");
+    setOutput(base64Image);
+  };
+
+  const handleSaveImage = () => {
+    setCroppedImage(true);
   };
 
   return (
@@ -91,12 +137,13 @@ const CameraPage = () => {
             aspectRatio={5 / 9}
           />
         )}
-        {imageTaken && (
+        {imageTaken && !croppedImage && (
           <ReactCrop
             crop={crop}
             onChange={(_, percentCrop) => setCrop(percentCrop)}
             ruleOfThirds
             keepSelection
+            onComplete={crop => handleCropImageNow(crop)}
           >
             <img
               src={image}
@@ -107,6 +154,7 @@ const CameraPage = () => {
             />
           </ReactCrop>
         )}
+        {croppedImage && <img src={output} alt="croppedImage" />}
         <Grid
           container
           justifyContent="space-around"
@@ -130,11 +178,35 @@ const CameraPage = () => {
               />
             </IconButton>
           </Grid>
-          <Grid item style={{ marginTop: 5 }}>
-            <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
-              <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
-            </IconButton>
-          </Grid>
+          {imageTaken && !croppedImage && (
+            <Grid item style={{ marginTop: 25 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleSaveImage}
+              >
+                Crop
+              </Button>
+            </Grid>
+          )}
+          {imageTaken && croppedImage && (
+            <Grid item style={{ marginTop: 25 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleSaveImage}
+              >
+                Finish
+              </Button>
+            </Grid>
+          )}
+          {!imageTaken && (
+            <Grid item style={{ marginTop: 5 }}>
+              <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
+                <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
+              </IconButton>
+            </Grid>
+          )}
         </Grid>
       </Card>
     </Grid>
