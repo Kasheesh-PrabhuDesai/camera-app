@@ -6,15 +6,17 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
-import { useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
 import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
+import ReactCrop, { Crop } from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
 
 const useStyles = makeStyles(theme =>
   createStyles({
     cameraCard: {
-      width: 720,
+      width: "100vw",
       background: "#CCCCCC",
     },
     container: {
@@ -45,6 +47,13 @@ const CameraPage = () => {
   const [imageTaken, setImageTaken] = useState<boolean>(false);
   const [cameraMode, setCameraMode] =
     useState<CameraProps["facingMode"]>("environment");
+  const [crop, setCrop] = useState<Crop>({
+    unit: "%", // Can be 'px' or '%'
+    x: 0,
+    y: 0,
+    width: 50,
+    height: 50,
+  });
 
   const handleClickPhoto = () => {
     setImage(camera?.current?.takePhoto());
@@ -83,13 +92,16 @@ const CameraPage = () => {
           />
         )}
         {imageTaken && (
-          <img
-            src={image}
-            width={"100%"}
-            height={"100%"}
-            alt="test"
-            style={{ transform: "rotateY(180deg)" }}
-          />
+          <ReactCrop
+            crop={crop}
+            onChange={(_, percentCrop) => setCrop(percentCrop)}
+          >
+            <img
+              src={image}
+              alt="test"
+              style={{ transform: "rotateY(180deg)" }}
+            />
+          </ReactCrop>
         )}
         <Grid
           container
