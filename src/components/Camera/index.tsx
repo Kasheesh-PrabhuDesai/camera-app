@@ -96,12 +96,6 @@ const CameraPage = () => {
     canvas.height = crop.height;
     const ctx: any = canvas.getContext("2d");
 
-    const pixelRatio = 1;
-    canvas.width = crop.width * pixelRatio;
-    canvas.height = crop.height * pixelRatio;
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-    ctx.imageSmoothingQuality = "high";
-
     ctx.drawImage(
       imgElement,
       crop.x * scaleX,
