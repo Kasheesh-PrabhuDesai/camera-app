@@ -154,7 +154,19 @@ const CameraPage = () => {
             />
           </ReactCrop>
         )}
-        {croppedImage && <img src={output} alt="croppedImage" />}
+        {croppedImage && (
+          <Grid container>
+            <img
+              src={output}
+              alt="croppedImage"
+              style={{
+                objectFit: "contain",
+                maxWidth: "100%",
+                overflow: "hidden",
+              }}
+            />
+          </Grid>
+        )}
         <Grid
           container
           justifyContent="space-around"
