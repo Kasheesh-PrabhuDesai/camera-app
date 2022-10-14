@@ -7,8 +7,9 @@ import {
   IconButton,
 } from "@material-ui/core";
 import { useRef, useState } from "react";
-import { Camera } from "react-camera-pro";
+import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
+import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -29,6 +30,10 @@ const useStyles = makeStyles(theme =>
       width: 64,
       height: 64,
     },
+    flipCameraIcon: {
+      width: 48,
+      height: 48,
+    },
   })
 );
 
@@ -37,7 +42,9 @@ const CameraPage = () => {
 
   const camera = useRef<any>(null);
   const [image, setImage] = useState("");
-  const [imageTaken, setImageTaken] = useState<Boolean>(false);
+  const [imageTaken, setImageTaken] = useState<boolean>(false);
+  const [cameraMode, setCameraMode] =
+    useState<CameraProps["facingMode"]>("environment");
 
   const handleClickPhoto = () => {
     setImage(camera?.current?.takePhoto());
@@ -47,6 +54,14 @@ const CameraPage = () => {
   const handleCancelPhoto = () => {
     setImageTaken(false);
     setImage("");
+  };
+
+  const handleFlipCamera = () => {
+    if (cameraMode === "user") {
+      setCameraMode("environment");
+    } else {
+      setCameraMode("user");
+    }
   };
 
   return (
@@ -61,6 +76,7 @@ const CameraPage = () => {
               switchCamera: undefined,
               canvas: undefined,
             }}
+            facingMode={cameraMode}
             aspectRatio={5 / 9}
           />
         )}
@@ -89,7 +105,7 @@ const CameraPage = () => {
             </Button>
           </Grid>
           <Grid item>
-            <IconButton>
+            <IconButton disabled={imageTaken}>
               <CameraIcon
                 className={classes.cameraIcon}
                 htmlColor="#E34234"
@@ -97,14 +113,12 @@ const CameraPage = () => {
               />
             </IconButton>
           </Grid>
-          <Grid item style={{ marginTop: 25 }}>
-            <Button variant="contained" color="secondary">
-              Finished
-            </Button>
+          <Grid item style={{ marginTop: 5 }}>
+            <IconButton onClick={handleFlipCamera}>
+              <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
+            </IconButton>
           </Grid>
         </Grid>
-
-        {/* <img src={image} alt="Taken photo" /> */}
       </Card>
     </Grid>
   );
