@@ -161,11 +161,11 @@ const CameraPage = () => {
           <img
             src={output}
             alt="croppedImage"
-            height={"100%"}
-            width={"100%"}
             style={{
               objectFit: "contain",
               backgroundSize: "contain",
+              maxWidth: "100%",
+              maxHeight: "100%",
             }}
           />
           // </Box>
