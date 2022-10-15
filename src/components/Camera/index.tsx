@@ -252,7 +252,6 @@ const CameraPage = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                type="submit"
                 onClick={generatePdfFromImages}
               >
                 Finish
