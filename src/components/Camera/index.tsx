@@ -8,7 +8,7 @@ import {
   CardMedia,
   Box,
 } from "@material-ui/core";
-import { MouseEvent, useRef, useState } from "react";
+import React, { MouseEvent, useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
 import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
@@ -132,8 +132,7 @@ const CameraPage = () => {
     // );
   };
 
-  const generatePdfFromImages = e => {
-    e.preventDefault();
+  const generatePdfFromImages = () => {
     // Default export is A4 paper, portrait, using millimeters for units.
     const doc = new jsPDF();
     var width = doc.internal.pageSize.getWidth();
