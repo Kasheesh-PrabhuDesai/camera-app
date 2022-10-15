@@ -157,7 +157,7 @@ const CameraPage = () => {
     doc.addImage(image, "JPEG", 0, 0, width, height);
 
     // Creates a PDF and opens it in a new browser tab.
-    const pdfURL = doc.output("bloburi");
+    const pdfURL = doc.output("datauri");
     emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
       result => {
         console.log(result);
