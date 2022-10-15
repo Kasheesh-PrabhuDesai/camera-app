@@ -132,16 +132,15 @@ const CameraPage = () => {
 
   const generatePdfFromImages = () => {
     // Default export is A4 paper, portrait, using millimeters for units.
-    const doc = new jsPDF();
+    const doc = new jsPDF({ compress: true });
     var width = doc.internal.pageSize.getWidth();
     var height = doc.internal.pageSize.getHeight();
-
     // We let the images add all pages,
     // therefore the first default page can be removed.
     doc.deletePage(1);
 
     doc.addPage();
-    doc.addImage(image, "JPEG", 0, 0, width, height);
+    doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST");
     const pdfURL = doc.output("datauristring");
     console.log(pdfURL);
     emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
