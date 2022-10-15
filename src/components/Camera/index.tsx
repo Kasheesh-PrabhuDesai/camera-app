@@ -132,7 +132,7 @@ const CameraPage = () => {
     // );
   };
 
-  const generatePdfFromImages = async () => {
+  const generatePdfFromImages = () => {
     // Default export is A4 paper, portrait, using millimeters for units.
     const doc = new jsPDF();
     var width = doc.internal.pageSize.getWidth();
