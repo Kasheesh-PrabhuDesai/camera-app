@@ -16,6 +16,12 @@ import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
 import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
+import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -64,6 +70,11 @@ const CameraPage = () => {
     height: 50,
   });
   const [croppedImage, setCroppedImage] = useState<boolean>(false);
+  const [open, setOpen] = React.useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const handleClickPhoto = () => {
     setImage(camera?.current?.takePhoto());
@@ -141,12 +152,14 @@ const CameraPage = () => {
         console.log(error.text);
       }
     );
+    setImageTaken(false);
+    setOpen(true);
   };
 
   return (
     <Grid container className={classes.container}>
       {/* <Card className={classes.cameraCard}> */}
-      {!imageTaken && (
+      {!imageTaken && !open && (
         <Camera
           ref={camera}
           errorMessages={{
@@ -190,30 +203,31 @@ const CameraPage = () => {
             />
           </Grid>
         )} */}
-      <Grid
-        container
-        justifyContent="space-around"
-        className={classes.buttonGrid}
-      >
-        <Grid item style={{ marginTop: 25 }}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleCancelPhoto}
-            disabled={!imageTaken}
-          >
-            Cancel
-          </Button>
-        </Grid>
-        <Grid item>
-          <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
-            <CameraIcon
-              className={classes.cameraIcon}
-              htmlColor={imageTaken ? "grey" : "#E34234"}
-            />
-          </IconButton>
-        </Grid>
-        {/* {imageTaken && !croppedImage && (
+      {!open && (
+        <Grid
+          container
+          justifyContent="space-around"
+          className={classes.buttonGrid}
+        >
+          <Grid item style={{ marginTop: 25 }}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleCancelPhoto}
+              disabled={!imageTaken}
+            >
+              Cancel
+            </Button>
+          </Grid>
+          <Grid item>
+            <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
+              <CameraIcon
+                className={classes.cameraIcon}
+                htmlColor={imageTaken ? "grey" : "#E34234"}
+              />
+            </IconButton>
+          </Grid>
+          {/* {imageTaken && !croppedImage && (
             <Grid item style={{ marginTop: 25 }}>
               <Button
                 variant="contained"
@@ -224,25 +238,49 @@ const CameraPage = () => {
               </Button>
             </Grid>
           )} */}
-        {imageTaken && (
-          <Grid item style={{ marginTop: 25 }}>
-            <Button
-              variant="contained"
-              color="secondary"
-              onClick={generatePdfFromImages}
-            >
-              Finish
+          {imageTaken && (
+            <Grid item style={{ marginTop: 25 }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={generatePdfFromImages}
+              >
+                Finish
+              </Button>
+            </Grid>
+          )}
+          {!imageTaken && (
+            <Grid item style={{ marginTop: 5 }}>
+              <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
+                <FlipCameraIosIcon className={classes.flipCameraIcon} />
+              </IconButton>
+            </Grid>
+          )}
+        </Grid>
+      )}
+      {open && (
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">
+            {"Image upload successful"}
+          </DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              You have successfully used our camera app to click your photo! You
+              can now close this dialog.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleClose} color="primary">
+              Close
             </Button>
-          </Grid>
-        )}
-        {!imageTaken && (
-          <Grid item style={{ marginTop: 5 }}>
-            <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
-              <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
-            </IconButton>
-          </Grid>
-        )}
-      </Grid>
+          </DialogActions>
+        </Dialog>
+      )}
       {/* </Card> */}
     </Grid>
   );
