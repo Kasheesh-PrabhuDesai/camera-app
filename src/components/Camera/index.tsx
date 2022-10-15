@@ -132,13 +132,12 @@ const CameraPage = () => {
     // );
   };
 
-  const generatePdfFromImages = () => {
+  const generatePdfFromImages = e => {
+    e.preventDefault();
     // Default export is A4 paper, portrait, using millimeters for units.
     const doc = new jsPDF();
     var width = doc.internal.pageSize.getWidth();
     var height = doc.internal.pageSize.getHeight();
-    const imgElement = document.createElement("img");
-    imgElement.src = image;
 
     // We let the images add all pages,
     // therefore the first default page can be removed.
@@ -190,6 +189,8 @@ const CameraPage = () => {
             alt="test"
             style={{
               transform: cameraMode === "user" ? "rotateY(180deg)" : "",
+              maxWidth: "100%",
+              maxHeight: "100%",
             }}
           />
           // </ReactCrop>
@@ -245,7 +246,7 @@ const CameraPage = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={generatePdfFromImages}
+                onClick={e => generatePdfFromImages}
               >
                 Finish
               </Button>
