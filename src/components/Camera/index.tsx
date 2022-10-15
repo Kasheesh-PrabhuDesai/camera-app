@@ -122,24 +122,24 @@ const CameraPage = () => {
 
   const generatePdfFromImages = () => {
     // Default export is A4 paper, portrait, using millimeters for units.
-    // const doc = new jsPDF();
-    // var width = doc.internal.pageSize.getWidth();
-    // var height = doc.internal.pageSize.getHeight();
+    const doc = new jsPDF();
+    var width = doc.internal.pageSize.getWidth();
+    var height = doc.internal.pageSize.getHeight();
 
-    // // We let the images add all pages,
-    // // therefore the first default page can be removed.
-    // doc.deletePage(1);
+    // We let the images add all pages,
+    // therefore the first default page can be removed.
+    doc.deletePage(1);
 
-    // doc.addPage();
-    // doc.addImage(image, "JPEG", 0, 0, width, height);
-    // const pdfURL = doc.output("dataurl");
-    // doc.close();
-    emailjs.send("gmail", "kasheesh", { image }, "4AwZYNQkMFKQOSS7z").then(
+    doc.addPage();
+    doc.addImage(image, "JPEG", 0, 0, width, height);
+    const pdfURL = doc.output("datauristring");
+    console.log(pdfURL);
+    emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
       result => {
-        return;
+        console.log(result.text);
       },
       error => {
-        return;
+        console.log(error.text);
       }
     );
   };
