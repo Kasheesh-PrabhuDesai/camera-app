@@ -8,12 +8,15 @@ import {
   CardMedia,
   Box,
 } from "@material-ui/core";
-import { useRef, useState } from "react";
+import { MouseEvent, useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
 import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
 import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
+import mailjet from "../../utils/emailHelper";
+import emailjs from "@emailjs/browser";
+import jsPDF from "jspdf";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -40,6 +43,11 @@ const useStyles = makeStyles(theme =>
     },
   })
 );
+
+const A4_PAPER_DIMENSIONS = {
+  width: 210,
+  height: 297,
+};
 
 const CameraPage = () => {
   const classes = useStyles();
@@ -114,7 +122,52 @@ const CameraPage = () => {
   };
 
   const handleSaveImage = () => {
-    setCroppedImage(true);
+    console.log(image);
+    // emailjs.send("gmail", "kasheesh", { image }, "4AwZYNQkMFKQOSS7z").then(
+    //   result => {
+    //     console.log(result);
+    //   },
+    //   error => {
+    //     console.log(error);
+    //   }
+    // );
+  };
+
+  const generatePdfFromImages = async () => {
+    // Default export is A4 paper, portrait, using millimeters for units.
+    const doc = new jsPDF();
+    var width = doc.internal.pageSize.getWidth();
+    var height = doc.internal.pageSize.getHeight();
+    const imgElement = document.createElement("img");
+    imgElement.src = image;
+
+    // We let the images add all pages,
+    // therefore the first default page can be removed.
+    doc.deletePage(1);
+
+    doc.addPage();
+    // doc.addImage(
+    //   imgElement.src,
+    //   "image/jpeg",
+    //   // Images are vertically and horizontally centered on the page.
+    //   (A4_PAPER_DIMENSIONS.width - imgElement.width) / 2,
+    //   (A4_PAPER_DIMENSIONS.height - imgElement.height) / 2,
+    //   imgElement.width / 2,
+    //   imgElement.height / 2
+    // );
+    doc.addImage(image, "JPEG", 0, 0, width, height);
+
+    // Creates a PDF and opens it in a new browser tab.
+    const pdfURL = doc.output("datauri");
+    emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
+      result => {
+        console.log(result);
+      },
+      error => {
+        console.log(error);
+      }
+    );
+    window.open(pdfURL as any, "_blank");
   };
 
   return (
@@ -133,24 +186,24 @@ const CameraPage = () => {
             aspectRatio={5 / 9}
           />
         )}
-        {imageTaken && !croppedImage && (
-          <ReactCrop
-            crop={crop}
-            onChange={(_, percentCrop) => setCrop(percentCrop)}
-            ruleOfThirds
-            keepSelection
-            onComplete={crop => handleCropImageNow(crop)}
-          >
-            <img
-              src={image}
-              alt="test"
-              style={{
-                transform: cameraMode === "user" ? "rotateY(180deg)" : "",
-              }}
-            />
-          </ReactCrop>
+        {imageTaken && (
+          // <ReactCrop
+          //   crop={crop}
+          //   onChange={(_, percentCrop) => setCrop(percentCrop)}
+          //   ruleOfThirds
+          //   keepSelection
+          //   onComplete={crop => handleCropImageNow(crop)}
+          // >
+          <img
+            src={image}
+            alt="test"
+            style={{
+              transform: cameraMode === "user" ? "rotateY(180deg)" : "",
+            }}
+          />
+          // </ReactCrop>
         )}
-        {croppedImage && (
+        {/* {croppedImage && (
           <Grid container justifyContent="center">
             <img
               src={output}
@@ -161,7 +214,7 @@ const CameraPage = () => {
               }}
             />
           </Grid>
-        )}
+        )} */}
         <Grid
           container
           justifyContent="space-around"
@@ -185,7 +238,7 @@ const CameraPage = () => {
               />
             </IconButton>
           </Grid>
-          {imageTaken && !croppedImage && (
+          {/* {imageTaken && !croppedImage && (
             <Grid item style={{ marginTop: 25 }}>
               <Button
                 variant="contained"
@@ -195,13 +248,14 @@ const CameraPage = () => {
                 Crop
               </Button>
             </Grid>
-          )}
-          {imageTaken && croppedImage && (
+          )} */}
+          {imageTaken && (
             <Grid item style={{ marginTop: 25 }}>
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={handleSaveImage}
+                type="submit"
+                onClick={generatePdfFromImages}
               >
                 Finish
               </Button>
