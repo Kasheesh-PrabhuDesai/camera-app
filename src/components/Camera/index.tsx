@@ -14,7 +14,6 @@ import CameraIcon from "@material-ui/icons/Camera";
 import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
 import ReactCrop, { Crop } from "react-image-crop";
 import "react-image-crop/dist/ReactCrop.css";
-import mailjet from "../../utils/emailHelper";
 import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
 
