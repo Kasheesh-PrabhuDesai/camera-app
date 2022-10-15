@@ -134,7 +134,14 @@ const CameraPage = () => {
     doc.addImage(image, "JPEG", 0, 0, width, height);
     const pdfURL = doc.output("dataurl");
     doc.close();
-    emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z");
+    emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
+      result => {
+        return;
+      },
+      error => {
+        return;
+      }
+    );
   };
 
   return (
