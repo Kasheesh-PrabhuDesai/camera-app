@@ -20,17 +20,16 @@ import jsPDF from "jspdf";
 const useStyles = makeStyles(theme =>
   createStyles({
     cameraCard: {
-      width: "100vw",
       background: "#CCCCCC",
+      height: "100%",
     },
     container: {
-      height: "80vh",
-      width: "100%",
       justifyContent: "center",
       alignItems: "center",
     },
     buttonGrid: {
-      marginTop: 20,
+      // marginTop: 20,
+      backgroundColor: "#CCCCCC",
     },
     cameraIcon: {
       width: 64,
@@ -146,40 +145,40 @@ const CameraPage = () => {
 
   return (
     <Grid container className={classes.container}>
-      <Card className={classes.cameraCard}>
-        {!imageTaken && (
-          <Camera
-            ref={camera}
-            errorMessages={{
-              noCameraAccessible: undefined,
-              permissionDenied: undefined,
-              switchCamera: "Could not find back camera",
-              canvas: undefined,
-            }}
-            facingMode={cameraMode}
-            aspectRatio={5 / 9}
-          />
-        )}
-        {imageTaken && (
-          // <ReactCrop
-          //   crop={crop}
-          //   onChange={(_, percentCrop) => setCrop(percentCrop)}
-          //   ruleOfThirds
-          //   keepSelection
-          //   onComplete={crop => handleCropImageNow(crop)}
-          // >
-          <img
-            src={image}
-            alt="test"
-            style={{
-              transform: cameraMode === "user" ? "rotateY(180deg)" : "",
-              maxWidth: "100%",
-              maxHeight: "100%",
-            }}
-          />
-          // </ReactCrop>
-        )}
-        {/* {croppedImage && (
+      {/* <Card className={classes.cameraCard}> */}
+      {!imageTaken && (
+        <Camera
+          ref={camera}
+          errorMessages={{
+            noCameraAccessible: undefined,
+            permissionDenied: undefined,
+            switchCamera: "Could not find back camera",
+            canvas: undefined,
+          }}
+          facingMode={cameraMode}
+          aspectRatio={window.innerWidth / window.innerHeight}
+        />
+      )}
+      {imageTaken && (
+        // <ReactCrop
+        //   crop={crop}
+        //   onChange={(_, percentCrop) => setCrop(percentCrop)}
+        //   ruleOfThirds
+        //   keepSelection
+        //   onComplete={crop => handleCropImageNow(crop)}
+        // >
+        <img
+          src={image}
+          alt="test"
+          style={{
+            transform: cameraMode === "user" ? "rotateY(180deg)" : "",
+            maxWidth: "100%",
+            maxHeight: "100%",
+          }}
+        />
+        // </ReactCrop>
+      )}
+      {/* {croppedImage && (
           <Grid container justifyContent="center">
             <img
               src={output}
@@ -191,30 +190,30 @@ const CameraPage = () => {
             />
           </Grid>
         )} */}
-        <Grid
-          container
-          justifyContent="space-around"
-          className={classes.buttonGrid}
-        >
-          <Grid item style={{ marginTop: 25 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCancelPhoto}
-              disabled={!imageTaken}
-            >
-              Cancel
-            </Button>
-          </Grid>
-          <Grid item>
-            <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
-              <CameraIcon
-                className={classes.cameraIcon}
-                htmlColor={imageTaken ? "grey" : "#E34234"}
-              />
-            </IconButton>
-          </Grid>
-          {/* {imageTaken && !croppedImage && (
+      <Grid
+        container
+        justifyContent="space-around"
+        className={classes.buttonGrid}
+      >
+        <Grid item style={{ marginTop: 25 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCancelPhoto}
+            disabled={!imageTaken}
+          >
+            Cancel
+          </Button>
+        </Grid>
+        <Grid item>
+          <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
+            <CameraIcon
+              className={classes.cameraIcon}
+              htmlColor={imageTaken ? "grey" : "#E34234"}
+            />
+          </IconButton>
+        </Grid>
+        {/* {imageTaken && !croppedImage && (
             <Grid item style={{ marginTop: 25 }}>
               <Button
                 variant="contained"
@@ -225,26 +224,26 @@ const CameraPage = () => {
               </Button>
             </Grid>
           )} */}
-          {imageTaken && (
-            <Grid item style={{ marginTop: 25 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={generatePdfFromImages}
-              >
-                Finish
-              </Button>
-            </Grid>
-          )}
-          {!imageTaken && (
-            <Grid item style={{ marginTop: 5 }}>
-              <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
-                <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
-              </IconButton>
-            </Grid>
-          )}
-        </Grid>
-      </Card>
+        {imageTaken && (
+          <Grid item style={{ marginTop: 25 }}>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={generatePdfFromImages}
+            >
+              Finish
+            </Button>
+          </Grid>
+        )}
+        {!imageTaken && (
+          <Grid item style={{ marginTop: 5 }}>
+            <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
+              <FlipCameraAndroidIcon className={classes.flipCameraIcon} />
+            </IconButton>
+          </Grid>
+        )}
+      </Grid>
+      {/* </Card> */}
     </Grid>
   );
 };
