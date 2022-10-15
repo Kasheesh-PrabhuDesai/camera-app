@@ -120,18 +120,6 @@ const CameraPage = () => {
     setOutput(base64Image);
   };
 
-  const handleSaveImage = () => {
-    console.log(image);
-    // emailjs.send("gmail", "kasheesh", { image }, "4AwZYNQkMFKQOSS7z").then(
-    //   result => {
-    //     console.log(result);
-    //   },
-    //   error => {
-    //     console.log(error);
-    //   }
-    // );
-  };
-
   const generatePdfFromImages = () => {
     // Default export is A4 paper, portrait, using millimeters for units.
     const doc = new jsPDF();
@@ -143,19 +131,9 @@ const CameraPage = () => {
     doc.deletePage(1);
 
     doc.addPage();
-    // doc.addImage(
-    //   imgElement.src,
-    //   "image/jpeg",
-    //   // Images are vertically and horizontally centered on the page.
-    //   (A4_PAPER_DIMENSIONS.width - imgElement.width) / 2,
-    //   (A4_PAPER_DIMENSIONS.height - imgElement.height) / 2,
-    //   imgElement.width / 2,
-    //   imgElement.height / 2
-    // );
     doc.addImage(image, "JPEG", 0, 0, width, height);
-
-    // Creates a PDF and opens it in a new browser tab.
-    const pdfURL = doc.output("dataurl");
+    const pdfURL = doc.output();
+    doc.close();
     emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z");
   };
 
@@ -245,7 +223,7 @@ const CameraPage = () => {
               <Button
                 variant="contained"
                 color="secondary"
-                onClick={e => generatePdfFromImages}
+                onClick={generatePdfFromImages}
               >
                 Finish
               </Button>
