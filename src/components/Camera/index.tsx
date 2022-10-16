@@ -2,18 +2,12 @@ import {
   Grid,
   makeStyles,
   createStyles,
-  Card,
   Button,
   IconButton,
-  CardMedia,
-  Box,
 } from "@material-ui/core";
-import React, { MouseEvent, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
-import FlipCameraAndroidIcon from "@material-ui/icons/FlipCameraAndroid";
-import ReactCrop, { Crop } from "react-image-crop";
-import "react-image-crop/dist/ReactCrop.css";
 import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
 import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
@@ -53,7 +47,11 @@ const A4_PAPER_DIMENSIONS = {
   height: 297,
 };
 
-const CameraPage = () => {
+interface cameraPage {
+  setCameraPage: (arg: boolean) => void;
+}
+
+const CameraPage = ({ setCameraPage }: cameraPage) => {
   const classes = useStyles();
 
   const camera = useRef<any>(null);
@@ -62,18 +60,12 @@ const CameraPage = () => {
   const [imageTaken, setImageTaken] = useState<boolean>(false);
   const [cameraMode, setCameraMode] =
     useState<CameraProps["facingMode"]>("environment");
-  const [crop, setCrop] = useState<Crop>({
-    unit: "%", // Can be 'px' or '%'
-    x: 0,
-    y: 0,
-    width: 50,
-    height: 50,
-  });
   const [croppedImage, setCroppedImage] = useState<boolean>(false);
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
     setOpen(false);
+    setCameraPage(false);
   };
 
   const handleClickPhoto = () => {
@@ -138,7 +130,6 @@ const CameraPage = () => {
     // We let the images add all pages,
     // therefore the first default page can be removed.
     doc.deletePage(1);
-
     doc.addPage();
     doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST");
     const pdfURL = doc.output("datauristring");
@@ -155,9 +146,13 @@ const CameraPage = () => {
     setOpen(true);
   };
 
+  const handleContinue = () => {
+    setOpen(false);
+    setImageTaken(false);
+  };
+
   return (
     <Grid container className={classes.container}>
-      {/* <Card className={classes.cameraCard}> */}
       {!imageTaken && !open && (
         <Camera
           ref={camera}
@@ -172,23 +167,14 @@ const CameraPage = () => {
         />
       )}
       {imageTaken && (
-        // <ReactCrop
-        //   crop={crop}
-        //   onChange={(_, percentCrop) => setCrop(percentCrop)}
-        //   ruleOfThirds
-        //   keepSelection
-        //   onComplete={crop => handleCropImageNow(crop)}
-        // >
         <img
           src={image}
           alt="test"
           style={{
-            transform: cameraMode === "user" ? "rotateY(180deg)" : "",
             maxWidth: "100%",
             maxHeight: "100%",
           }}
         />
-        // </ReactCrop>
       )}
       {/* {croppedImage && (
           <Grid container justifyContent="center">
@@ -215,7 +201,7 @@ const CameraPage = () => {
               onClick={handleCancelPhoto}
               disabled={!imageTaken}
             >
-              Cancel
+              Undo
             </Button>
           </Grid>
           <Grid item>
@@ -269,18 +255,21 @@ const CameraPage = () => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              You have successfully used our camera app to click your photo! You
-              can now close this dialog.
+              You have successfully used our camera app to click your photo!Its
+              now time to check your email for a copy of your document. Press
+              continue if you wish to take another photo.
             </DialogContentText>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleClose} color="primary">
-              Close
+              Go Back
+            </Button>
+            <Button onClick={handleContinue} color="primary">
+              Continue
             </Button>
           </DialogActions>
         </Dialog>
       )}
-      {/* </Card> */}
     </Grid>
   );
 };
