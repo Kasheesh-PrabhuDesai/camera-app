@@ -132,7 +132,7 @@ const Home = () => {
                 <ListItemText className={classes.avatarText}>
                   <Typography className={classes.cameraSubTitle}>
                     3. Sit back and relax. We will process your photo and email
-                    it to you as a pdf document!
+                    it as a pdf document!
                   </Typography>
                 </ListItemText>
               </ListItem>
