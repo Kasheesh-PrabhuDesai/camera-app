@@ -8,30 +8,27 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 interface DialogProps {
   open: boolean;
   handleContinue: () => void;
-  handleClose: () => void;
+  handleClosePhotoDialog: () => void;
 }
 
-const PhotoDialog = ({ open, handleContinue, handleClose }: DialogProps) => {
+const PhotoDialog = ({
+  open,
+  handleContinue,
+  handleClosePhotoDialog,
+}: DialogProps) => {
   return (
     <div>
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">
-          {"Image upload successful"}
-        </DialogTitle>
+      <Dialog open={open} onClose={handleClosePhotoDialog}>
+        <DialogTitle>{"Image upload successful"}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">
+          <DialogContentText>
             You have successfully used our camera app to click your photo!Its
             now time to check your email for a copy of your document. Press
             continue if you wish to take another photo.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary">
+          <Button onClick={handleClosePhotoDialog} color="primary">
             Go Back
           </Button>
           <Button onClick={handleContinue} color="primary">

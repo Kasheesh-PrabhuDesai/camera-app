@@ -12,6 +12,8 @@ import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
 import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
 import PhotoDialog from "../Dialogs/photoUploaded";
+import EmailDialog from "../Dialogs/EmailDialog";
+import { SubmitHandler } from "react-hook-form";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -44,11 +46,18 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   const [imageTaken, setImageTaken] = useState<boolean>(false);
   const [cameraMode, setCameraMode] =
     useState<CameraProps["facingMode"]>("environment");
-  const [open, setOpen] = React.useState(false);
+  const [openEmailDialog, setOpenEmailDialog] = React.useState(false);
+  const [openPhotoDialog, setOpenPhotoDialog] = React.useState(false);
+  const [pdfURL, setPdfURL] = useState<any>();
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleClosePhotoDialog = () => {
+    setOpenPhotoDialog(false);
     setCameraPage(false);
+  };
+
+  const handleCloseEmailDialog = () => {
+    setOpenEmailDialog(false);
+    setImageTaken(false);
   };
 
   const handleClickPhoto = () => {
@@ -81,28 +90,50 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
     doc.deletePage(1);
     doc.addPage();
     doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST");
-    const pdfURL = doc.output("datauristring");
-    console.log(pdfURL);
-    emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
-      result => {
-        console.log(result.text);
-      },
-      error => {
-        console.log(error.text);
-      }
-    );
-    setImageTaken(false);
-    setOpen(true);
+    const result = doc.output("datauristring");
+    setPdfURL(result);
+    // emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
+    //   result => {
+    //     console.log(result.text);
+    //   },
+    //   error => {
+    //     console.log(error.text);
+    //   }
+    // );
+    // setImageTaken(false);
+    setOpenEmailDialog(true);
   };
 
   const handleContinue = () => {
-    setOpen(false);
+    setOpenPhotoDialog(false);
     setImageTaken(false);
+  };
+
+  const handleSendEmail: SubmitHandler<{
+    email: string;
+  }> = data => {
+    emailjs
+      .send(
+        "gmail",
+        "kasheesh",
+        { pdfURL: pdfURL, email: data.email },
+        "4AwZYNQkMFKQOSS7z"
+      )
+      .then(
+        result => {
+          console.log(result.text);
+        },
+        error => {
+          console.log(error.text);
+        }
+      );
+    setOpenPhotoDialog(true);
+    setOpenEmailDialog(false);
   };
 
   return (
     <Grid container className={classes.container}>
-      {!imageTaken && !open && (
+      {!imageTaken && !openPhotoDialog && !openEmailDialog && (
         <Camera
           ref={camera}
           errorMessages={{
@@ -115,17 +146,17 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           aspectRatio={window.innerWidth / window.innerHeight}
         />
       )}
-      {imageTaken && (
+      {imageTaken && !openEmailDialog && !openPhotoDialog && (
         <img
           src={image}
-          alt="test"
+          alt="your_document"
           style={{
             maxWidth: "100%",
             maxHeight: "100%",
           }}
         />
       )}
-      {!open && (
+      {!openPhotoDialog && !openEmailDialog && (
         <Grid
           container
           justifyContent="space-around"
@@ -172,11 +203,18 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           )}
         </Grid>
       )}
-      {open && (
+      {openEmailDialog && (
+        <EmailDialog
+          open={openEmailDialog}
+          handleSendEmail={handleSendEmail}
+          handleCloseEmailDialog={handleCloseEmailDialog}
+        />
+      )}
+      {openPhotoDialog && (
         <PhotoDialog
-          open={open}
+          open={openPhotoDialog}
           handleContinue={handleContinue}
-          handleClose={handleClose}
+          handleClosePhotoDialog={handleClosePhotoDialog}
         />
       )}
     </Grid>
