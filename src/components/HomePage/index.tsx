@@ -117,7 +117,8 @@ const Home = () => {
                 </ListItemAvatar>
                 <ListItemText className={classes.avatarText}>
                   <Typography className={classes.cameraSubTitle}>
-                    2. Upload the document using the finish button
+                    2. Upload the document using the finish button. Enter your
+                    desired email address and click continue.
                   </Typography>
                 </ListItemText>
               </ListItem>
