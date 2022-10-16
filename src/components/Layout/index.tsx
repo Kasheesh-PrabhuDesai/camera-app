@@ -42,7 +42,7 @@ function Layout({ children, description, title }: any) {
         <CssBaseline />
         <AppBar position="static" className={classes.navbar}>
           <Toolbar disableGutters>
-            <Box display="flex" width={"95%"} justifyContent={"center"}>
+            <Box display="flex" width={"100%"} justifyContent={"center"}>
               <Typography className={classes.brand}>
                 MieterEngel Coding Challenge
               </Typography>
@@ -50,11 +50,11 @@ function Layout({ children, description, title }: any) {
           </Toolbar>
         </AppBar>
         <Container className={classes.main}>{children}</Container>
-        {/* <footer className={classes.footer}>
+        <footer className={classes.footer}>
           <Typography>
             Developed with ❤️️ in Aachen by Kasheesh PrabhuDesai
           </Typography>
-        </footer> */}
+        </footer>
       </ThemeProvider>
     </div>
   );
