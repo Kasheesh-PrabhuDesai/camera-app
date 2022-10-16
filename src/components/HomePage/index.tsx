@@ -38,18 +38,22 @@ const useStyles = makeStyles(theme =>
       textAlign: "center",
     },
     cameraSubTitle: {
-      color: "#000000",
-      fontWeight: 500,
-      fontSize: 18,
+      color: "#454545",
+      fontWeight: 400,
+      fontSize: 16,
     },
     cardAvatar: {
       width: 164,
       height: 164,
+      [theme.breakpoints.down("sm")]: {
+        width: 84,
+        height: 84,
+      },
     },
     avatarText: {
       marginLeft: 20,
       [theme.breakpoints.down("sm")]: {
-        marginLeft: 5,
+        marginLeft: 10,
         display: "flex",
       },
     },
