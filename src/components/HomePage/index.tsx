@@ -86,7 +86,7 @@ const Home = () => {
         <Card className={classes.cameraCard}>
           <CardContent>
             <Typography className={classes.cameraTitle}>
-              Do you have a document you would like to scan? Thats great
+              Do you have a document you would like to upload? Thats great
             </Typography>
             <br />
             <Typography className={classes.camerasubHeader}>
