@@ -11,24 +11,15 @@ import CameraIcon from "@material-ui/icons/Camera";
 import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
 import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import DialogTitle from "@material-ui/core/DialogTitle";
+import PhotoDialog from "../Dialogs/photoUploaded";
 
 const useStyles = makeStyles(theme =>
   createStyles({
-    cameraCard: {
-      background: "#CCCCCC",
-      height: "100%",
-    },
     container: {
       justifyContent: "center",
       alignItems: "center",
     },
     buttonGrid: {
-      // marginTop: 20,
       backgroundColor: "#CCCCCC",
     },
     cameraIcon: {
@@ -42,25 +33,17 @@ const useStyles = makeStyles(theme =>
   })
 );
 
-const A4_PAPER_DIMENSIONS = {
-  width: 210,
-  height: 297,
-};
-
 interface cameraPage {
   setCameraPage: (arg: boolean) => void;
 }
 
 const CameraPage = ({ setCameraPage }: cameraPage) => {
   const classes = useStyles();
-
   const camera = useRef<any>(null);
   const [image, setImage] = useState("");
-  const [output, setOutput] = useState<string>("");
   const [imageTaken, setImageTaken] = useState<boolean>(false);
   const [cameraMode, setCameraMode] =
     useState<CameraProps["facingMode"]>("environment");
-  const [croppedImage, setCroppedImage] = useState<boolean>(false);
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => {
@@ -76,8 +59,6 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   const handleCancelPhoto = () => {
     setImageTaken(false);
     setImage("");
-    setOutput("");
-    setCroppedImage(false);
   };
 
   const handleFlipCamera = () => {
@@ -88,38 +69,6 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
       setCameraMode("environment");
       camera?.current?.switchCamera();
     }
-  };
-
-  const handleCropImageNow = (crop: {
-    width: number;
-    height: number;
-    x: number;
-    y: number;
-  }) => {
-    const canvas = document.createElement("canvas");
-    const imgElement = document.createElement("img");
-    imgElement.src = image;
-    const scaleX = imgElement.naturalWidth / imgElement.width;
-    const scaleY = imgElement.naturalHeight / imgElement.height;
-    canvas.width = crop.width;
-    canvas.height = crop.height;
-    const ctx: any = canvas.getContext("2d");
-
-    ctx.drawImage(
-      imgElement,
-      crop.x * scaleX,
-      crop.y * scaleY,
-      crop.width * scaleX,
-      crop.height * scaleY,
-      0,
-      0,
-      crop.width,
-      crop.height
-    );
-
-    // Converting to base64
-    const base64Image = canvas.toDataURL("image/jpeg");
-    setOutput(base64Image);
   };
 
   const generatePdfFromImages = () => {
@@ -176,18 +125,6 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           }}
         />
       )}
-      {/* {croppedImage && (
-          <Grid container justifyContent="center">
-            <img
-              src={output}
-              alt="croppedImage"
-              style={{
-                maxWidth: "100%",
-                maxHeight: "100%",
-              }}
-            />
-          </Grid>
-        )} */}
       {!open && (
         <Grid
           container
@@ -212,17 +149,6 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
               />
             </IconButton>
           </Grid>
-          {/* {imageTaken && !croppedImage && (
-            <Grid item style={{ marginTop: 25 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={handleSaveImage}
-              >
-                Crop
-              </Button>
-            </Grid>
-          )} */}
           {imageTaken && (
             <Grid item style={{ marginTop: 25 }}>
               <Button
@@ -237,38 +163,21 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           {!imageTaken && (
             <Grid item style={{ marginTop: 5 }}>
               <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
-                <FlipCameraIosIcon className={classes.flipCameraIcon} />
+                <FlipCameraIosIcon
+                  className={classes.flipCameraIcon}
+                  htmlColor="black"
+                />
               </IconButton>
             </Grid>
           )}
         </Grid>
       )}
       {open && (
-        <Dialog
+        <PhotoDialog
           open={open}
-          onClose={handleClose}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-        >
-          <DialogTitle id="alert-dialog-title">
-            {"Image upload successful"}
-          </DialogTitle>
-          <DialogContent>
-            <DialogContentText id="alert-dialog-description">
-              You have successfully used our camera app to click your photo!Its
-              now time to check your email for a copy of your document. Press
-              continue if you wish to take another photo.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Go Back
-            </Button>
-            <Button onClick={handleContinue} color="primary">
-              Continue
-            </Button>
-          </DialogActions>
-        </Dialog>
+          handleContinue={handleContinue}
+          handleClose={handleClose}
+        />
       )}
     </Grid>
   );
