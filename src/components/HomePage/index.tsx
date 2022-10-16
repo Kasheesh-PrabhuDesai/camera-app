@@ -47,7 +47,11 @@ const useStyles = makeStyles(theme =>
       height: 164,
     },
     avatarText: {
-      marginLeft: 50,
+      marginLeft: 20,
+      [theme.breakpoints.down("sm")]: {
+        marginLeft: 5,
+        display: "flex",
+      },
     },
     divider: {
       margin: 30,
@@ -85,7 +89,7 @@ const Home = () => {
               With just three simple steps you can get your job done
             </Typography>
             <br />
-            <List style={{ width: "100%" }}>
+            <List style={{ maxWidth: "100%" }}>
               <ListItem>
                 <ListItemAvatar>
                   <Avatar
