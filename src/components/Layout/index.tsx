@@ -50,11 +50,6 @@ function Layout({ children, description, title }: any) {
           </Toolbar>
         </AppBar>
         <Container className={classes.main}>{children}</Container>
-        <footer className={classes.footer}>
-          <Typography>
-            Developed with ❤️️ in Aachen by Kasheesh PrabhuDesai
-          </Typography>
-        </footer>
       </ThemeProvider>
     </div>
   );
