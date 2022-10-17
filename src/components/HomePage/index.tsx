@@ -13,7 +13,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import React, { useState } from "react";
+import { useState } from "react";
 import CameraPage from "../Camera";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme =>
       fontSize: 18,
       textAlign: "center",
     },
-    camerasubHeader: {
+    cameraSubHeader: {
       color: "#000000",
       fontWeight: 500,
       fontSize: 18,
@@ -89,7 +89,7 @@ const Home = () => {
               Do you have a document you would like to upload? Thats great
             </Typography>
             <br />
-            <Typography className={classes.camerasubHeader}>
+            <Typography className={classes.cameraSubHeader}>
               With just three simple steps you can get your job done
             </Typography>
             <br />

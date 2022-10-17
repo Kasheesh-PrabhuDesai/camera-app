@@ -1,19 +1,11 @@
-import {
-  createStyles,
-  FilledInput,
-  Grid,
-  makeStyles,
-  TextField,
-  Typography,
-} from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import * as yup from "yup";
-import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
 interface DialogProps {
@@ -22,6 +14,7 @@ interface DialogProps {
   handleCloseEmailDialog: () => void;
 }
 
+//creating a schema for validating the email address entered in the dialog
 const emailSchema = yup.object().shape({
   email: yup
     .string()

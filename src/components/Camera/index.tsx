@@ -81,16 +81,16 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   };
 
   const generatePdfFromImages = () => {
-    // Default export is A4 paper, portrait, using millimeters for units.
+    // Default export is A4 paper
     const doc = new jsPDF({ compress: true });
     var width = doc.internal.pageSize.getWidth();
     var height = doc.internal.pageSize.getHeight();
-    // We let the images add all pages,
-    // therefore the first default page can be removed.
+
+    // We let the images add all pages, therefore the first default page can be removed.
     doc.deletePage(1);
     doc.addPage();
-    doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST");
-    const result = doc.output("datauristring");
+    doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST"); //adds image to pdf document while at the same time trying to compress the image
+    const result = doc.output("datauristring"); //converting the created pdf into a url string
     setPdfURL(result);
     setOpenEmailDialog(true);
   };
@@ -100,6 +100,7 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
     setImageTaken(false);
   };
 
+  //the created pdf is sent as an email to the desired email address using the emailJs package
   const handleSendEmail: SubmitHandler<{
     email: string;
   }> = data => {
