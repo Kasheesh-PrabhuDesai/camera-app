@@ -5,7 +5,7 @@ import {
   Button,
   IconButton,
 } from "@material-ui/core";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
 import emailjs from "@emailjs/browser";
@@ -32,6 +32,9 @@ const useStyles = makeStyles(theme =>
       width: 48,
       height: 48,
     },
+    allButtons: {
+      textTransform: "initial",
+    },
   })
 );
 
@@ -49,6 +52,8 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   const [openEmailDialog, setOpenEmailDialog] = React.useState(false);
   const [openPhotoDialog, setOpenPhotoDialog] = React.useState(false);
   const [pdfURL, setPdfURL] = useState<any>();
+  const [numberOfCameras, setNumberOfCameras] = useState(0);
+  const [accessDenied, setAccessDenied] = useState<boolean>(false);
 
   const handleClosePhotoDialog = () => {
     setOpenPhotoDialog(false);
@@ -66,8 +71,12 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   };
 
   const handleCancelPhoto = () => {
-    setImageTaken(false);
-    setImage("");
+    if (image === "") {
+      setCameraPage(false);
+    } else {
+      setImageTaken(false);
+      setImage("");
+    }
   };
 
   const handleFlipCamera = () => {
@@ -123,19 +132,47 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
     setOpenEmailDialog(false);
   };
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (numberOfCameras < 1) setAccessDenied(true);
+      else setAccessDenied(false);
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [numberOfCameras]);
+
   return (
     <Grid container className={classes.container}>
-      {!imageTaken && !openPhotoDialog && !openEmailDialog && (
+      {accessDenied && (
+        <Grid
+          container
+          justify="center"
+          direction="column"
+          alignItems="center"
+          style={{ minHeight: "80vh", width: "100%" }}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            className={classes.allButtons}
+            onClick={() => setCameraPage(false)}
+          >
+            Camera access is denied. Please grant access to your camera and try
+            again
+          </Button>
+        </Grid>
+      )}
+      {!imageTaken && !openPhotoDialog && !openEmailDialog && !accessDenied && (
         <Camera
           ref={camera}
           errorMessages={{
             noCameraAccessible: undefined,
-            permissionDenied: undefined,
+            permissionDenied: "Access to camera has been denied",
             switchCamera: "Could not find back camera",
             canvas: undefined,
           }}
           facingMode={cameraMode}
           aspectRatio={window.innerWidth / window.innerHeight}
+          numberOfCamerasCallback={setNumberOfCameras}
         />
       )}
       {imageTaken && !openEmailDialog && !openPhotoDialog && (
@@ -148,7 +185,7 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           }}
         />
       )}
-      {!openPhotoDialog && !openEmailDialog && (
+      {!openPhotoDialog && !openEmailDialog && !accessDenied && (
         <Grid
           container
           justifyContent="space-around"
@@ -159,9 +196,9 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
               variant="contained"
               color="primary"
               onClick={handleCancelPhoto}
-              disabled={!imageTaken}
+              className={classes.allButtons}
             >
-              Undo
+              {imageTaken ? "Undo" : "Go back"}
             </Button>
           </Grid>
           <Grid item>
@@ -178,6 +215,7 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
                 variant="contained"
                 color="secondary"
                 onClick={generatePdfFromImages}
+                className={classes.allButtons}
               >
                 Finish
               </Button>
