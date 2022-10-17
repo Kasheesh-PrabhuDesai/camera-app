@@ -13,7 +13,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { useState } from "react";
+import React, { useState } from "react";
 import CameraPage from "../Camera";
 import DirectionsRunIcon from "@material-ui/icons/DirectionsRun";
 

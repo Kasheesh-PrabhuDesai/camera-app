@@ -11,7 +11,7 @@ import CameraIcon from "@material-ui/icons/Camera";
 import emailjs from "@emailjs/browser";
 import jsPDF from "jspdf";
 import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
-import PhotoDialog from "../Dialogs/photoUploaded";
+import PhotoDialog from "../Dialogs/PhotoDialog";
 import EmailDialog from "../Dialogs/EmailDialog";
 import { SubmitHandler } from "react-hook-form";
 
@@ -92,15 +92,6 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
     doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST");
     const result = doc.output("datauristring");
     setPdfURL(result);
-    // emailjs.send("gmail", "kasheesh", { pdfURL }, "4AwZYNQkMFKQOSS7z").then(
-    //   result => {
-    //     console.log(result.text);
-    //   },
-    //   error => {
-    //     console.log(error.text);
-    //   }
-    // );
-    // setImageTaken(false);
     setOpenEmailDialog(true);
   };
 

@@ -10,7 +10,7 @@ import {
 } from "@material-ui/core";
 import useStyles from "../../utils/style";
 
-function Layout({ children, description, title }: any) {
+function Layout({ children }: any) {
   const theme = createTheme({
     typography: {
       h1: {
