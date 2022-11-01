@@ -8,12 +8,12 @@ import {
 import React, { useEffect, useRef, useState } from "react";
 import { Camera, CameraProps } from "react-camera-pro";
 import CameraIcon from "@material-ui/icons/Camera";
-import emailjs from "@emailjs/browser";
-import jsPDF from "jspdf";
 import FlipCameraIosIcon from "@material-ui/icons/FlipCameraIos";
 import PhotoDialog from "../Dialogs/PhotoDialog";
 import EmailDialog from "../Dialogs/EmailDialog";
 import { SubmitHandler } from "react-hook-form";
+import { sendEmail } from "../helpers/sendEmail";
+import { createPdf } from "../helpers/createPdf";
 
 const useStyles = makeStyles(theme =>
   createStyles({
@@ -90,16 +90,7 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   };
 
   const generatePdfFromImages = () => {
-    // Default export is A4 paper
-    const doc = new jsPDF({ compress: true });
-    var width = doc.internal.pageSize.getWidth();
-    var height = doc.internal.pageSize.getHeight();
-
-    // We let the images add all pages, therefore the first default page can be removed.
-    doc.deletePage(1);
-    doc.addPage();
-    doc.addImage(image, "JPEG", 0, 0, width, height, "", "FAST"); //adds image to pdf document while at the same time trying to compress the image
-    const result = doc.output("datauristring"); //converting the created pdf into a url string
+    const result = createPdf(image);
     setPdfURL(result);
     setOpenEmailDialog(true);
   };
@@ -113,21 +104,7 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
   const handleSendEmail: SubmitHandler<{
     email: string;
   }> = data => {
-    emailjs
-      .send(
-        "gmail",
-        "kasheesh",
-        { pdfURL: pdfURL, email: data.email },
-        "4AwZYNQkMFKQOSS7z"
-      )
-      .then(
-        result => {
-          console.log(result.text);
-        },
-        error => {
-          console.log(error.text);
-        }
-      );
+    sendEmail(pdfURL, data.email);
     setOpenPhotoDialog(true);
     setOpenEmailDialog(false);
   };
@@ -136,31 +113,33 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
     const timer = setTimeout(() => {
       if (numberOfCameras < 1) setAccessDenied(true);
       else setAccessDenied(false);
-    }, 2500);
+    }, 2000);
     return () => clearTimeout(timer);
   }, [numberOfCameras]);
 
   return (
     <Grid container className={classes.container}>
-      {accessDenied && (
-        <Grid
-          container
-          justify="center"
-          direction="column"
-          alignItems="center"
-          style={{ minHeight: "80vh", width: "100%" }}
+      <Grid
+        container
+        justify="center"
+        direction="column"
+        alignItems="center"
+        style={{
+          minHeight: "80vh",
+          width: "100%",
+          display: accessDenied ? "flex" : "none",
+        }}
+      >
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.allButtons}
+          onClick={() => setCameraPage(false)}
         >
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.allButtons}
-            onClick={() => setCameraPage(false)}
-          >
-            Camera access is denied. Please grant access to your camera and try
-            again
-          </Button>
-        </Grid>
-      )}
+          Camera access is denied. Please grant access to your camera and try
+          again
+        </Button>
+      </Grid>
       {!imageTaken && !openPhotoDialog && !openEmailDialog && !accessDenied && (
         <Camera
           ref={camera}
@@ -175,78 +154,75 @@ const CameraPage = ({ setCameraPage }: cameraPage) => {
           numberOfCamerasCallback={setNumberOfCameras}
         />
       )}
-      {imageTaken && !openEmailDialog && !openPhotoDialog && (
-        <img
-          src={image}
-          alt="your_document"
-          style={{
-            maxWidth: "100%",
-            maxHeight: "100%",
-          }}
-        />
-      )}
-      {!openPhotoDialog && !openEmailDialog && !accessDenied && (
-        <Grid
-          container
-          justifyContent="space-around"
-          className={classes.buttonGrid}
-        >
-          <Grid item style={{ marginTop: 25 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleCancelPhoto}
-              className={classes.allButtons}
-            >
-              {imageTaken ? "Undo" : "Go back"}
-            </Button>
-          </Grid>
-          <Grid item>
-            <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
-              <CameraIcon
-                className={classes.cameraIcon}
-                htmlColor={imageTaken ? "grey" : "#E34234"}
-              />
-            </IconButton>
-          </Grid>
-          {imageTaken && (
-            <Grid item style={{ marginTop: 25 }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={generatePdfFromImages}
-                className={classes.allButtons}
-              >
-                Finish
-              </Button>
-            </Grid>
-          )}
-          {!imageTaken && (
-            <Grid item style={{ marginTop: 5 }}>
-              <IconButton onClick={handleFlipCamera} disabled={imageTaken}>
-                <FlipCameraIosIcon
-                  className={classes.flipCameraIcon}
-                  htmlColor="black"
-                />
-              </IconButton>
-            </Grid>
-          )}
+      <img
+        src={image}
+        alt="your_document"
+        style={{
+          maxWidth: "100%",
+          maxHeight: "100%",
+          display:
+            imageTaken && !openEmailDialog && !openPhotoDialog
+              ? "flex"
+              : "none",
+        }}
+      />
+      <Grid
+        container
+        justifyContent="space-around"
+        className={classes.buttonGrid}
+        style={{
+          display:
+            !openPhotoDialog && !openEmailDialog && !accessDenied
+              ? "flex"
+              : "none",
+        }}
+      >
+        <Grid item style={{ marginTop: 25 }}>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleCancelPhoto}
+            className={classes.allButtons}
+          >
+            {imageTaken ? "Undo" : "Go back"}
+          </Button>
         </Grid>
-      )}
-      {openEmailDialog && (
-        <EmailDialog
-          open={openEmailDialog}
-          handleSendEmail={handleSendEmail}
-          handleCloseEmailDialog={handleCloseEmailDialog}
-        />
-      )}
-      {openPhotoDialog && (
-        <PhotoDialog
-          open={openPhotoDialog}
-          handleContinue={handleContinue}
-          handleClosePhotoDialog={handleClosePhotoDialog}
-        />
-      )}
+        <Grid item>
+          <IconButton disabled={imageTaken} onClick={handleClickPhoto}>
+            <CameraIcon
+              className={classes.cameraIcon}
+              htmlColor={imageTaken ? "grey" : "#E34234"}
+            />
+          </IconButton>
+        </Grid>
+        <Grid item style={{ marginTop: imageTaken ? 25 : 20 }}>
+          <Button
+            variant={imageTaken ? "contained" : "text"}
+            color={imageTaken ? "secondary" : "default"}
+            onClick={imageTaken ? generatePdfFromImages : handleFlipCamera}
+            className={imageTaken ? classes.allButtons : classes.flipCameraIcon}
+          >
+            {imageTaken ? (
+              "Finish"
+            ) : (
+              <FlipCameraIosIcon
+                className={classes.flipCameraIcon}
+                htmlColor="black"
+              />
+            )}
+          </Button>
+        </Grid>
+      </Grid>
+      <EmailDialog
+        open={openEmailDialog}
+        handleSendEmail={handleSendEmail}
+        handleCloseEmailDialog={handleCloseEmailDialog}
+      />
+      <PhotoDialog
+        open={openPhotoDialog}
+        handleContinue={handleContinue}
+        handleClosePhotoDialog={handleClosePhotoDialog}
+      />
     </Grid>
   );
 };
