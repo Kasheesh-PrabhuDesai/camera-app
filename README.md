@@ -1,46 +1,13 @@
-# Getting Started with Create React App
+THE FOLLOWING REPOSITORY IS A SIMPLE IMPLMENETATION OF A CAMERA APP. THE USER CAN USE HIS WEBCAM , MOBILE CAMERA TO CLICK IMAGES BOTH FRONT AND BACK CAMERA IS POSSIBLE. THE IMAGE IS THEN CONVERTED INTO A PDF FILE AND SENT TO THE EMAIL ADDRESS SPECIFIED BY THE USER. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+FEW POINTS TO REMEMBER BEFORE TESTING THE CODE IMPLEMENTATION / FEATURES INCLUDED : 
 
-## Available Scripts
+1) I have added the flexibility by providing the user a dialog to enter the email address where they desire the photo to be sent.
 
-In the project directory, you can run:
+2) EmailJs package has been used to send the photo clicked as en email. The free plan of EmailJS allows only attachment of up to 500KB to be sent. Therefore it is very important to note that if the photo is taken with a high resolution camera, then the photo will not be sent as an email. This however does not mean that the code is not functioning. It simply is a restriction due to the plan I have purchased of EmailJS.
 
-### `yarn start`
+3) I had planned on adding a feature to allow the user to crop their images immediately after clicking the photos. I have not been able to fully implement it in the codebase. I have however created a reusable component for the same which can be further improved given more time. This is my idea of further improvements to the camera app.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+4) I have also added the functionality to allow the user to flip the camera from front camera to back camera and so on. 
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+5) Validation has been added to the email dialog to only allow valid email addresses. This field is required to send the photo via email. This adds an extra layer of security.
