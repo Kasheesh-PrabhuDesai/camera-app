@@ -94,7 +94,7 @@ export default function InstructionsPage({
             <ListItem>
               <ListItemAvatar>
                 <Avatar
-                  src="/document-photo.jpg"
+                  src="/images/document-photo.jpg"
                   className={classes.cardAvatar}
                 ></Avatar>
               </ListItemAvatar>
@@ -108,7 +108,7 @@ export default function InstructionsPage({
             <ListItem>
               <ListItemAvatar>
                 <Avatar
-                  src="/upload-big.png"
+                  src="/images/upload-big.png"
                   className={classes.cardAvatar}
                 ></Avatar>
               </ListItemAvatar>
@@ -123,7 +123,7 @@ export default function InstructionsPage({
             <ListItem>
               <ListItemAvatar>
                 <Avatar
-                  src="/relax.jpg"
+                  src="/images/relax.jpg"
                   className={classes.cardAvatar}
                 ></Avatar>
               </ListItemAvatar>

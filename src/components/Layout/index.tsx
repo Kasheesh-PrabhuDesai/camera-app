@@ -44,7 +44,7 @@ function Layout({ children }: any) {
           <Toolbar disableGutters>
             <Box display="flex" width={"100%"} justifyContent={"center"}>
               <Typography className={classes.brand}>
-                MieterEngel Coding Challenge
+                Simple Camera App
               </Typography>
             </Box>
           </Toolbar>
